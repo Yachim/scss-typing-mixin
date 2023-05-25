@@ -6,7 +6,7 @@
 </h1>
 
 <style lang="scss">
-  @use "../sass/typing.scss";
+  @use "../sass/typing/typing.scss";
 
   .typing-area {
     text-align: center;
