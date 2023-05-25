@@ -3,6 +3,7 @@
   import Highlight from "svelte-highlight";
   import scss from "svelte-highlight/languages/scss";
   import github from "svelte-highlight/styles/github-dark-dimmed";
+  import { onMount } from "svelte";
 
   const syntax = `@mixin apply-typing(
     $instructions,
@@ -21,23 +22,48 @@
     $set-content: true
 )`;
 
-  const examples = `/* Main heading */
-@include typing.apply-typing(
-    ("+Want a cool effect?", "s15", "-w1", "s10", "+animation?"),
-    6s,
-    1s,
-    $cursor-color: colors.$text
-);
+  const examples = `/* Documentation heading */
+.typing-area4 {
+  font-size: 3rem;
 
+  &::before {
+    content: "Docs";
+  }
 
-/* Documentation heading */
-@include typing.apply-typing(
-    ("Docs", "s4", "-1", "s2", "+umentation"),
-    2s,
-    1s,
-    $cursor-color: colors.$text,
-    $set-content: false
-);`;
+  &:global(.visible) {
+    @include typing.apply-typing(
+      (
+        "Docs",
+        "s4",
+        "-1",
+        "s2",
+        "+umentation"
+      ),
+      2s,
+      1s,
+      $cursor-color: colors.$text,
+      $set-content: false
+    );
+  }
+}`;
+
+  let docsHeading: Element;
+  onMount(() => {
+    function observerFn(
+      entries: IntersectionObserverEntry[],
+      observer: IntersectionObserver
+    ) {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }
+
+    const observer = new IntersectionObserver(observerFn);
+    observer.observe(docsHeading);
+  });
 </script>
 
 <svelte:head>
@@ -57,7 +83,7 @@
 </div>
 
 <div class="panel docs">
-  <h2 class="typing-area visible typing-area4">
+  <h2 bind:this={docsHeading} class="typing-area typing-area4">
     <span>Documentation</span>
   </h2>
 
@@ -116,7 +142,7 @@
       </p>
     </div>
 
-    <h3 class="examples-heading">Examples:</h3>
+    <h3 class="examples-heading">Example:</h3>
     <Highlight langtag class="examples" language={scss} code={examples} />
   </div>
 </div>
@@ -124,6 +150,11 @@
 <style lang="scss">
   @use "../sass/typing/typing.scss";
   @use "../sass/colors.scss";
+  @import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+
+  :global(code) {
+    font-family: "Fira Code", monospace;
+  }
 
   .panel {
     width: 100%;
@@ -259,7 +290,7 @@
       content: "Docs";
     }
 
-    &.visible {
+    &:global(.visible) {
       @include typing.apply-typing(
         ("Docs", "s4", "-1", "s2", "+umentation"),
         2s,
