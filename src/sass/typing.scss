@@ -1,0 +1,42 @@
+@use "sass:string";
+@use "sass:math";
+@use "./typing-gen.scss";
+@use "./utils.scss";
+
+// instructions:
+// - first is initial string
+// - `+` = add chars
+// - `-` = remove amout of chars
+// - `s` = stay a number of steps
+@mixin apply-typing(
+  $instructions,
+  $duration,
+  $delay,
+  $typing-timing-func: ease-in-out,
+  $cursor: true,
+  $cursor-thickness: 2px,
+  $cursor-style: solid,
+  $cursor-color: black,
+  $cursor-duration: 1s,
+  $cursor-timing-func: ease-in-out,
+  $cursor-end-delay: 2
+) {
+  $typing-keyframes-name: "typing-" + string.unique-id();
+  $cnt: get-cnt($instructions);
+  @include typing-gen.generate-typing($typing-keyframes-name, $instructions);
+
+  &::before {
+    content: "";
+    animation: #{$typing-keyframes-name} $duration $typing-timing-func $delay forwards;
+  }
+
+  @if $cursor {
+    &::after {
+      content: "";
+      border-right: $cursor-thickness $cursor-style $cursor-color;
+      animation: #{typing-gen.$blink-cursor-keyframes-name} $cursor-duration $cursor-timing-func math.ceil(utils.strip-unit(
+        $duration + $delay + $cursor-end-delay
+      )) forwards;
+    }
+  }
+}

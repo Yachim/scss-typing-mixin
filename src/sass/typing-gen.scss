@@ -1,0 +1,94 @@
+@use "sass:string";
+@use "sass:list";
+@use "sass:math";
+@use "./utils.scss";
+
+@function get-cnt($texts) {
+  // -1 because the last is 100%
+  $cnt: string.length(list.nth($texts, 1)) - 1;
+  @for $text-i from 2 through list.length($texts) {
+    $text: list.nth($texts, $text-i);
+    $op: string.slice($text, 1, 1);
+
+    @if $op == "+" {
+      $cnt: $cnt + string.length($text) - 1;
+    } @else if $op == "-" or $op == "s" {
+      $num: utils.to-number(string.slice($text, 2));
+      $cnt: $cnt + $num;
+    } @else {
+      @error "The first character of a string should be an operator. Either '+', '-' or 's'";
+    }
+  }
+
+  @return $cnt;
+}
+
+@mixin generate-typing($animation-name, $texts) {
+  $content: list.nth($texts, 1);
+
+  $cnt: get-cnt($texts);
+  $percent-change: math.div(100, $cnt);
+  $percent: $percent-change;
+
+  @keyframes #{$animation-name} {
+    0% {
+      content: $content;
+    }
+
+    @for $text-i from 2 through list.length($texts) {
+      $text: list.nth($texts, $text-i);
+      $op: string.slice($text, 1, 1);
+
+      @if $op == "+" {
+        @for $char-i from 2 through string.length($text) {
+          $char: string.slice($text, $char-i, $char-i);
+          $content: $content + $char;
+
+          #{$percent}% {
+            content: $content;
+          }
+
+          $percent: $percent + $percent-change;
+        }
+      } @else if $op == "-" {
+        $num: utils.to-number(string.slice($text, 2));
+        @for $_ from 1 through $num {
+          $content: string.slice($content, 1, -2);
+
+          #{$percent}% {
+            content: $content;
+          }
+
+          $percent: $percent + $percent-change;
+        }
+      } @else if $op == "s" {
+        $num: utils.to-number(string.slice($text, 2));
+        @for $_ from 1 through $num {
+          #{$percent}% {
+            content: $content;
+          }
+          $percent: $percent + $percent-change;
+        }
+      } @else {
+        @error "The first character of a string should be an operator. Either '+', '-' or 's'";
+      }
+    }
+
+    100% {
+      content: $content;
+    }
+  }
+}
+
+$blink-cursor-keyframes-name: "blink-cursor-" + string.unique-id();
+@keyframes #{$blink-cursor-keyframes-name} {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
