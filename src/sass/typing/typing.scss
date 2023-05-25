@@ -3,11 +3,6 @@
 @use "./typing-gen.scss";
 @use "./utils.scss";
 
-// instructions:
-// - first is initial string
-// - `+` = add chars
-// - `-` = remove amout of chars (or use `-a` to remove all)
-// - `s` = stay a number of steps
 @mixin apply-typing(
   $instructions,
   $duration,
@@ -19,15 +14,20 @@
   $cursor-color: black,
   $cursor-duration: 1s,
   $cursor-timing-func: ease-in-out,
+  $cursor-start-delay: 0s,
   $cursor-end-delay: 2,
-  $preserve-whitespace: true
+  $preserve-whitespace: true,
+  $set-content: true
 ) {
   $typing-keyframes-name: "typing-" + string.unique-id();
   $cnt: get-cnt($instructions);
   @include typing-gen.generate-typing($typing-keyframes-name, $instructions);
 
   &::before {
-    content: "";
+    @if $set-content {
+      content: "";
+    }
+
     animation: #{$typing-keyframes-name} $duration $typing-timing-func $delay forwards;
     @if $preserve-whitespace {
       white-space: pre;
@@ -36,11 +36,12 @@
 
   @if $cursor {
     &::after {
+      opacity: 0;
       content: "";
       border-right: $cursor-thickness $cursor-style $cursor-color;
-      animation: #{typing-gen.$blink-cursor-keyframes-name} $cursor-duration $cursor-timing-func math.ceil(utils.strip-unit(
-        $duration + $delay + $cursor-end-delay
-      )) forwards;
+      animation: #{typing-gen.$blink-cursor-keyframes-name} $cursor-duration $cursor-timing-func $cursor-start-delay math.ceil(utils.strip-unit(
+        $duration + $delay - $cursor-start-delay + $cursor-end-delay
+      ));
     }
   }
 }
