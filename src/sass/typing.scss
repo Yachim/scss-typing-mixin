@@ -6,7 +6,7 @@
 // instructions:
 // - first is initial string
 // - `+` = add chars
-// - `-` = remove amout of chars
+// - `-` = remove amout of chars (or use `-a` to remove all)
 // - `s` = stay a number of steps
 @mixin apply-typing(
   $instructions,
@@ -19,7 +19,8 @@
   $cursor-color: black,
   $cursor-duration: 1s,
   $cursor-timing-func: ease-in-out,
-  $cursor-end-delay: 2
+  $cursor-end-delay: 2,
+  $preserve-whitespace: true
 ) {
   $typing-keyframes-name: "typing-" + string.unique-id();
   $cnt: get-cnt($instructions);
@@ -28,6 +29,9 @@
   &::before {
     content: "";
     animation: #{$typing-keyframes-name} $duration $typing-timing-func $delay forwards;
+    @if $preserve-whitespace {
+      white-space: pre;
+    }
   }
 
   @if $cursor {

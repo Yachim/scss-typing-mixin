@@ -3,79 +3,96 @@
 @use "sass:math";
 @use "./utils.scss";
 
-@function get-cnt($texts) {
-  // -1 because the last is 100%
-  $cnt: string.length(list.nth($texts, 1)) - 1;
-  @for $text-i from 2 through list.length($texts) {
-    $text: list.nth($texts, $text-i);
-    $op: string.slice($text, 1, 1);
+// input: array of commands, output: array of content
+// commands:
+//  - `[string]` = replace content with string
+//  - `+[string]` = add chars one by one
+//  - `-` = remove chars one by one:
+//     - `-a` = remove all
+//     - `-w[num]` = remove number of words (leaving a trailing space)
+//     - `-[num]` = remove number of chars
+//  - `s` = stay (pause) a number of steps
+//  - use `\` to escape
+@function parse-cmds($cmds) {
+  $contents: ();
+  $first-op: string.slice(list.nth($cmds, 1), 1, 1);
+  @if $first-op == "-" {
+    @error "First command cannot be `-`";
+  } @else if $first-op == "+" {
+    $contents: ("");
+  }
+
+  @each $cmd in $cmds {
+    $op: string.slice($cmd, 1, 1);
 
     @if $op == "+" {
-      $cnt: $cnt + string.length($text) - 1;
-    } @else if $op == "-" or $op == "s" {
-      $num: utils.to-number(string.slice($text, 2));
-      $cnt: $cnt + $num;
+      $content: list.nth($contents, -1);
+      @for $char-i from 2 through string.length($cmd) {
+        $char: string.slice($cmd, $char-i, $char-i);
+        $content: $content + $char;
+        $contents: list.append($contents, $content);
+      }
+    } @else if $op == "-" {
+      $modifier: string.to-lower-case(string.slice($cmd, 2, 2));
+      $content: list.nth($contents, -1);
+      $num: 0;
+      @if $modifier == "a" {
+        $num: string.length($content);
+      } @else if $modifier == "w" {
+        $n: utils.to-number(string.slice($cmd, 3));
+        $word-list: string.split($content, " ");
+        $word-list-length: list.length($word-list);
+        @for $word-i from $word-list-length - ($n - 1) through $word-list-length {
+          $word: list.nth($word-list, $word-i);
+          $num: $num + string.length($word);
+        }
+        // spaces
+        $num: $num + ($n - 1);
+      } @else {
+        $num: utils.to-number(string.slice($cmd, 2));
+        @if $num > string.length($content) {
+          @error "Number cannot be bigger than the length of the string";
+        }
+      }
+
+      @for $_ from 1 through $num {
+        $content: string.slice($content, 1, -2);
+        $contents: list.append($contents, $content);
+      }
+    } @else if $op == "s" {
+      $num: utils.to-number(string.slice($cmd, 2));
+      $content: list.nth($contents, -1);
+      @for $_ from 1 through $num {
+        $contents: list.append($contents, $content);
+      }
     } @else {
-      @error "The first character of a string should be an operator. Either '+', '-' or 's'";
+      @if $op == "\\" {
+        $cmd: string.slice($cmd, 2);
+      }
+      $contents: list.append($contents, $cmd);
     }
   }
 
-  @return $cnt;
+  @return $contents;
 }
 
 @mixin generate-typing($animation-name, $texts) {
-  $content: list.nth($texts, 1);
+  $contents: parse-cmds($texts);
+  $contents-cnt: list.length($contents);
 
-  $cnt: get-cnt($texts);
-  $percent-change: math.div(100, $cnt);
-  $percent: $percent-change;
+  $percent-change: math.div(100, $contents-cnt);
 
   @keyframes #{$animation-name} {
-    0% {
-      content: $content;
-    }
+    @for $content-i from 1 to $contents-cnt {
+      $content: list.nth($contents, $content-i);
 
-    @for $text-i from 2 through list.length($texts) {
-      $text: list.nth($texts, $text-i);
-      $op: string.slice($text, 1, 1);
-
-      @if $op == "+" {
-        @for $char-i from 2 through string.length($text) {
-          $char: string.slice($text, $char-i, $char-i);
-          $content: $content + $char;
-
-          #{$percent}% {
-            content: $content;
-          }
-
-          $percent: $percent + $percent-change;
-        }
-      } @else if $op == "-" {
-        $num: utils.to-number(string.slice($text, 2));
-        @for $_ from 1 through $num {
-          $content: string.slice($content, 1, -2);
-
-          #{$percent}% {
-            content: $content;
-          }
-
-          $percent: $percent + $percent-change;
-        }
-      } @else if $op == "s" {
-        $num: utils.to-number(string.slice($text, 2));
-        @for $_ from 1 through $num {
-          #{$percent}% {
-            content: $content;
-          }
-          $percent: $percent + $percent-change;
-        }
-      } @else {
-        @error "The first character of a string should be an operator. Either '+', '-' or 's'";
+      #{$content-i * $percent-change}% {
+        content: $content;
       }
     }
 
     100% {
-      content: $content;
+      content: list.nth($contents, -1);
     }
   }
 }

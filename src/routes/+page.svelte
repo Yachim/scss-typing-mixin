@@ -9,20 +9,24 @@
   @use "../sass/typing.scss";
 
   .typing-area {
+    text-align: center;
+
     span {
       display: none;
     }
 
     @include typing.apply-typing(
-      [ "",
-      "+Want a cool effect?",
-      "s20",
-      "-7",
-      "s10",
-      "+animation?",
-      "s20",
-      "-29",
-      "+Use this mixin!" ],
+      (
+        "+Want a cool effect?",
+        "s20",
+        "-w1",
+        "s10",
+        "+animation?",
+        "s20",
+        "-a",
+        "s10",
+        "+Use this mixin!"
+      ),
       10s,
       1s
     );
