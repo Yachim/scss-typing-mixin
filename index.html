@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+    <link rel="stylesheet" href="https://meyerweb.com/eric/tools/css/reset/reset.css" />
+		<meta name="viewport" content="width=device-width" />
+		<meta http-equiv="content-security-policy" content="">
+		<link href="./_app/immutable/assets/2.7089f703.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.9db3d94f.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.4ecbeed0.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.42733bc7.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.d5338b94.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.1ccdc6e2.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.4c0d156b.js"><title>Typing animation</title><!-- HEAD_svelte-19qyxnm_START --><!-- HTML_TAG_START --><style>pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}/*!
+  Theme: GitHub Dark Dimmed
+  Description: Dark dimmed theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Colors taken from GitHub's CSS
+*/.hljs{color:#adbac7;background:#22272e}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#f47067}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#dcbdfb}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#6cb6ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#96d0ff}.hljs-built_in,.hljs-symbol{color:#f69d50}.hljs-code,.hljs-comment,.hljs-formula{color:#768390}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#8ddb8c}.hljs-subst{color:#adbac7}.hljs-section{color:#316dca;font-weight:700}.hljs-bullet{color:#eac55f}.hljs-emphasis{color:#adbac7;font-style:italic}.hljs-strong{color:#adbac7;font-weight:700}.hljs-addition{color:#b4f1b4;background-color:#1b4721}.hljs-deletion{color:#ffd8d3;background-color:#78191b}</style><!-- HTML_TAG_END --><!-- HEAD_svelte-19qyxnm_END -->
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+
+
+
+
+<div class="panel intro svelte-hmta0t"><h1 class="typing-area typing-area1 svelte-hmta0t"><span class="svelte-hmta0t">Want a cool animation?</span></h1>
+  <p class="typing-area typing-area2 svelte-hmta0t"><span class="svelte-hmta0t">Use this mixin!</span></p>
+  <p class="typing-area typing-area3 svelte-hmta0t"><span class="svelte-hmta0t">Scroll for documentation</span></p></div>
+
+<div class="panel docs svelte-hmta0t"><h2 class="typing-area typing-area4 svelte-hmta0t"><span class="svelte-hmta0t">Documentation</span></h2>
+
+  <div class="docs-content svelte-hmta0t"><h3 class="syntax-heading svelte-hmta0t">Parameters:</h3>
+    
+  <pre data-language="scss" class="syntax langtag svelte-11sh29b"><code class="hljs"><!-- HTML_TAG_START --><span class="hljs-keyword">@mixin</span> apply-typing(
+    <span class="hljs-variable">$instructions</span>,
+    <span class="hljs-variable">$duration</span>,
+    <span class="hljs-variable">$delay</span>,
+    <span class="hljs-variable">$typing-timing-func</span>: ease-in-out,
+    <span class="hljs-variable">$cursor</span>: true,
+    <span class="hljs-variable">$cursor-thickness</span>: <span class="hljs-number">2px</span>,
+    <span class="hljs-variable">$cursor-style</span>: solid,
+    <span class="hljs-variable">$cursor-color</span>: black,
+    <span class="hljs-variable">$cursor-duration</span>: <span class="hljs-number">1s</span>,
+    <span class="hljs-variable">$cursor-timing-func</span>: ease-in-out,
+    <span class="hljs-variable">$cursor-start-delay</span>: <span class="hljs-number">0s</span>,
+    <span class="hljs-variable">$cursor-end-delay</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-variable">$preserve-whitespace</span>: true,
+    <span class="hljs-variable">$set-content</span>: true
+)<!-- HTML_TAG_END --></code></pre>
+
+
+    <h3 class="explanation-heading svelte-hmta0t">Syntax:</h3>
+    <div class="explanation svelte-hmta0t"><p><code>$instructions</code>: an array of instructions:</p>
+      <ul><li><code>[string]</code> = replace content with string</li>
+        <li><code>+[string]</code> = add chars one by one</li>
+        <li><code>-</code> = remove chars one by one:
+          <ul><li><code>-a</code> = remove all</li>
+            <li><code>-w[num]</code> = remove number of words (leaving a trailing space)
+            </li>
+            <li><code>-[num]</code> = remove number of chars</li></ul></li>
+        <li><code>s</code> = stay (pause) a number of steps</li>
+        <li>use <code>\</code> to escape</li></ul>
+      <p><code>$duration</code>: the duration of the animation</p>
+      <p><code>$delay</code>: the delay of the animation</p>
+      <p><code>$typing-timing-func</code>: the timing function of the animation
+      </p>
+      <p><code>$cursor</code>: boolean; if a cursor should be present</p>
+      <p><code>$cursor-thickness</code>: thickness of the cursor</p>
+      <p><code>$cursor-style</code>: same as border-style</p>
+      <p><code>$cursor-color</code>: same as border-color</p>
+      <p><code>$cursor-duration</code>: duration one cycle of the cursor
+        animation
+      </p>
+      <p><code>$cursor-timing-func</code>: the timing function of the cursor&#39;s
+        animation
+      </p>
+      <p><code>$cursor-start-delay</code>: delay of the cursor&#39;s animation</p>
+      <p><code>$cursor-end-delay</code>: iteration cound; how much iterations
+        should the cursor be running after the typing animation is finished
+      </p>
+      <p><code>$preserve-whitespace</code>: boolean; if whitespace should be
+        preserved
+      </p>
+      <p><code>$set-content</code>: set to false if content is already set in the
+        before tag (as in the docs heading example)
+      </p></div>
+
+    <h3 class="examples-heading svelte-hmta0t">Example:</h3>
+    
+  <pre data-language="scss" class="examples langtag svelte-11sh29b"><code class="hljs"><!-- HTML_TAG_START --><span class="hljs-comment">/* Documentation heading */</span>
+<span class="hljs-selector-class">.typing-area4</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">3rem</span>;
+
+  &amp;<span class="hljs-selector-pseudo">::before</span> {
+    <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;Docs&quot;</span>;
+  }
+
+  &amp;:<span class="hljs-built_in">global</span>(.visible) {
+    <span class="hljs-keyword">@include</span> typing.apply-typing(
+      (
+        <span class="hljs-string">&quot;Docs&quot;</span>,
+        <span class="hljs-string">&quot;s4&quot;</span>,
+        <span class="hljs-string">&quot;-1&quot;</span>,
+        <span class="hljs-string">&quot;s2&quot;</span>,
+        <span class="hljs-string">&quot;+umentation&quot;</span>
+      ),
+      <span class="hljs-number">2s</span>,
+      <span class="hljs-number">1s</span>,
+      <span class="hljs-variable">$cursor-color</span>: colors.<span class="hljs-variable">$text</span>,
+      <span class="hljs-variable">$set-content</span>: false
+    );
+  }
+}<!-- HTML_TAG_END --></code></pre>
+</div>
+</div>
+
+
+			
+			<script>
+				{
+					__sveltekit_1ppnb17 = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.9db3d94f.js"),
+						import("./_app/immutable/entry/app.d5338b94.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
