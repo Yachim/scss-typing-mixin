@@ -67,6 +67,7 @@
 </script>
 
 <svelte:head>
+  <title>Typing animation</title>
   {@html github}
 </svelte:head>
 
@@ -88,7 +89,7 @@
   </h2>
 
   <div class="docs-content">
-    <h3 class="syntax-heading">Syntax:</h3>
+    <h3 class="syntax-heading">Parameters:</h3>
     <Highlight langtag class="syntax" language={scss} code={syntax} />
 
     <h3 class="explanation-heading">Syntax:</h3>
